@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "472483765039",
+    "firebase_url": "https://group7-duolingo.firebaseio.com",
+    "project_id": "group7-duolingo",
+    "storage_bucket": "group7-duolingo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472483765039:android:c475bca591dab211",
+        "android_client_info": {
+          "package_name": "com.group7.duolingo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472483765039-tm8on3tfj1pqjn19veul5mevt20aucvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.group7.duolingo",
+            "certificate_hash": "10a9f72a2903eb8ce88fbd2b0f010c673d92baa8"
+          }
+        },
+        {
+          "client_id": "472483765039-0uvoqlns0h95gt3md7ud3fmg008vjg4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8eVNJwZXPOeVfhx7SJBMRIJu49dbAoHg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472483765039-0uvoqlns0h95gt3md7ud3fmg008vjg4e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

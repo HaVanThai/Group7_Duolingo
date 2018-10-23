@@ -1,7 +1,6 @@
 package com.group7.duolingo;
 
-
-import android.media.Image;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -14,8 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
+import DAL.LessonManager;
+import DAL.OnGetDataListener;
+import entities.Lesson;
 import utils.DpiUtils;
 
 
@@ -24,25 +29,51 @@ import utils.DpiUtils;
  */
 public class StudyFragment extends Fragment {
 
-    ArrayList<String> lessons = new ArrayList<String>();
+    ArrayList<Lesson> lessons;
+    LessonManager lessonManager;
 
     public StudyFragment() {
         // Required empty public constructor
-
-        lessons.add("Lesson 1");
-        lessons.add("Lesson 2");
-        lessons.add("Lesson 3");
-        lessons.add("Lesson 4");
-        lessons.add("Lesson 5");
+        lessonManager = new LessonManager();
+        lessons = new ArrayList<>();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_study, container, false);
+        final View view = inflater.inflate(R.layout.fragment_study, container, false);
 
+        lessonManager.getAllLessons(new OnGetDataListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(QuerySnapshot data) {
+                for (QueryDocumentSnapshot document : data) {
+                    lessons.add(
+                            new Lesson(
+                                    Integer.valueOf(document.getLong("id").toString()),
+                                    Integer.valueOf(document.getLong("lesson_group_id").toString()),
+                                    document.getString("name")
+                            ));
+                }
+                drawLessonUI(view, lessons);
+            }
+
+            @Override
+            public void onFailed(Exception error) {
+
+            }
+        });
+
+        return view;
+    }
+
+    public void drawLessonUI(View view, ArrayList<Lesson> lessons){
         // Root LinearLayout in ScrollView
         LinearLayout scrollViewContainer = view.findViewById(R.id.scroll_view_container);
 
@@ -116,7 +147,16 @@ public class StudyFragment extends Fragment {
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 ));
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-                textView.setText(lessons.get(index++));
+                textView.setText(lessons.get(index++).getName());
+
+                // Add event
+                parentCardView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Intent lessonItent = new Intent(getActivity(), LessonContentActivity.class);
+                        startActivity(lessonItent);
+                    }
+                });
 
                 // Constraints
                 childCardView.addView(imageView);
@@ -130,7 +170,6 @@ public class StudyFragment extends Fragment {
 
             scrollViewContainer.addView(rowLayout);
         }
-        return view;
     }
 
 }
