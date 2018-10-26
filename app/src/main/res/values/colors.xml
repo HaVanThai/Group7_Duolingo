@@ -5,6 +5,11 @@
     <color name="colorGray">#666666</color>
     <color name="colorBlack">#000000</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorBlue">#3498DB</color>
+    <color name="colorLightBlue">#3498DB</color>
     <color name="colorLightGray">#D5D8DC</color>
+    <color name="colorBlue">#1cb0f6</color>
+    <color name="colorYellow">#ffbd00</color>
+    <color name="colorRed">#d33131</color>
+    <color name="colorGreen">#7ac70c</color>
+    <color name="bgColorGreen">#5ac604</color>
 </resources>

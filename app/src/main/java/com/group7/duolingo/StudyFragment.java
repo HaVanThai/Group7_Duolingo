@@ -1,8 +1,13 @@
 package com.group7.duolingo;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -12,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -61,12 +67,19 @@ public class StudyFragment extends Fragment {
                                     document.getString("name")
                             ));
                 }
+
+                // TODO
+                if(lessons.size() == 0) {
+                    for(int i=0;i<10;i++) {
+                        lessons.add(new Lesson(i, 0, "Lesson "+i));
+                    }
+                }
                 drawLessonUI(view, lessons);
             }
 
             @Override
             public void onFailed(Exception error) {
-
+                Toast.makeText(getActivity(), "faild to connect to firebase", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -74,16 +87,22 @@ public class StudyFragment extends Fragment {
     }
 
     public void drawLessonUI(View view, ArrayList<Lesson> lessons){
+        int[] colors = {
+                R.color.colorRed,
+                R.color.colorYellow,
+                R.color.colorGreen,
+                R.color.colorBlue
+        };
         // Root LinearLayout in ScrollView
         LinearLayout scrollViewContainer = view.findViewById(R.id.scroll_view_container);
 
         int index = 0;
-        int rowSize = 1;
+        int rowSize;
         int itemLayoutPadding = DpiUtils.toPixels(20, getResources().getDisplayMetrics());
-        int cardViewPadding = DpiUtils.toPixels(10, getResources().getDisplayMetrics());
-        int parentCardViewRadius = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
-        int childCardViewRadius = DpiUtils.toPixels(30, getResources().getDisplayMetrics());
-        int imageViewSize = DpiUtils.toPixels(40, getResources().getDisplayMetrics());
+        int stroke = DpiUtils.toPixels(10, getResources().getDisplayMetrics());
+        int imageSize = DpiUtils.toPixels(80, getResources().getDisplayMetrics());
+        int imagePadding = DpiUtils.toPixels(20, getResources().getDisplayMetrics());
+
         while (index < lessons.size()) {
 
             // Row LinearLayout in scrollViewContainer
@@ -111,34 +130,20 @@ public class StudyFragment extends Fragment {
                 itemLayout.setGravity(Gravity.CENTER_HORIZONTAL);
                 itemLayout.setPadding(itemLayoutPadding, itemLayoutPadding, itemLayoutPadding, 0);
 
-                // Parent CardView
-                CardView parentCardView = new CardView(getContext());
-                parentCardView.setLayoutParams(new LinearLayout.LayoutParams(
-                        2*parentCardViewRadius,
-                        2*parentCardViewRadius
-                ));
-                parentCardView.setRadius(parentCardViewRadius);
-                parentCardView.setCardBackgroundColor(getResources().getColor(R.color.colorLightGray));
-                parentCardView.setContentPadding(cardViewPadding, cardViewPadding, cardViewPadding, cardViewPadding);
-
-                // Child CardView
-                CardView childCardView = new CardView(getContext());
-                childCardView.setLayoutParams(new LinearLayout.LayoutParams(
-                        2 * childCardViewRadius,
-                        2 * childCardViewRadius
-                ));
-                childCardView.setRadius(childCardViewRadius);
-                childCardView.setCardBackgroundColor(getResources().getColor(R.color.colorBlue));
-                childCardView.setContentPadding(cardViewPadding, cardViewPadding, cardViewPadding, cardViewPadding);
-
-                // ImageView inside child CardView
+                // ImageView in Item LinearLayout
+                GradientDrawable gD = new GradientDrawable();
+                gD.setShape(GradientDrawable.OVAL);
+                gD.setStroke(stroke, getResources().getColor(R.color.colorLightGray));
+                int randColor = (int) Math.floor(Math.random()*4);
+                gD.setColor(getResources().getColor(colors[randColor]));
                 ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                        imageViewSize,
-                        imageViewSize
+                        imageSize,
+                        imageSize
                 ));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                imageView.setImageResource(getResources().getIdentifier("ant", "drawable", getContext().getPackageName()));
+                imageView.setPadding(imagePadding, imagePadding, imagePadding, imagePadding);
+                imageView.setImageResource(getResources().getIdentifier("duolingo", "drawable", getContext().getPackageName()));
+                imageView.setBackground(gD);
 
                 // TextView inside Item LinearLayout
                 TextView textView = new TextView(getContext());
@@ -150,19 +155,16 @@ public class StudyFragment extends Fragment {
                 textView.setText(lessons.get(index++).getName());
 
                 // Add event
-                parentCardView.setOnClickListener(new View.OnClickListener(){
+                imageView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        Intent lessonItent = new Intent(getActivity(), LessonContentActivity.class);
-                        startActivity(lessonItent);
+                        Intent lessonIntent = new Intent(getActivity(), LessonContentActivity.class);
+                        startActivity(lessonIntent);
                     }
                 });
 
                 // Constraints
-                childCardView.addView(imageView);
-                parentCardView.addView(childCardView);
-
-                itemLayout.addView(parentCardView);
+                itemLayout.addView(imageView);
                 itemLayout.addView(textView);
 
                 rowLayout.addView(itemLayout);
@@ -170,6 +172,7 @@ public class StudyFragment extends Fragment {
 
             scrollViewContainer.addView(rowLayout);
         }
+
     }
 
 }
