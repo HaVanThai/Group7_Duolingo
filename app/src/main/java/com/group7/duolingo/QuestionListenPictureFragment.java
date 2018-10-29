@@ -2,6 +2,7 @@ package com.group7.duolingo;
 
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import utils.StringUtils;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuestionTextPictureFragment extends Fragment
+public class QuestionListenPictureFragment extends Fragment
         implements View.OnClickListener{
 
     String[] questionParts;
@@ -24,12 +27,13 @@ public class QuestionTextPictureFragment extends Fragment
     ImageView questionImage2;
     ImageView questionImage3;
     ImageView questionImage4;
-    TextView textViewQuestion;
+    ImageView imageViewVolume;
+
+
 
     public String answer = "";
 
-
-    public QuestionTextPictureFragment() {
+    public QuestionListenPictureFragment() {
         // Required empty public constructor
     }
 
@@ -38,22 +42,28 @@ public class QuestionTextPictureFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_question_text_picture, container, false);
+        View view = inflater.inflate(R.layout.fragment_question_listen_picture, container, false);
+
         questionParts = (String[]) getArguments().getSerializable("questionParts");
         pictures = questionParts[1].split(";");
 
-        textViewQuestion = view.findViewById(R.id.textViewQuestion);
+        imageViewVolume = view.findViewById(R.id.imageViewVolume);
         questionImage1 = view.findViewById(R.id.questionImage1);
         questionImage2 = view.findViewById(R.id.questionImage2);
         questionImage3 = view.findViewById(R.id.questionImage3);
         questionImage4 = view.findViewById(R.id.questionImage4);
 
-        textViewQuestion.setText(StringUtils.upperCaseFirstLetter(questionParts[0]));
+        imageViewVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LessonContentActivity)getActivity()).ttsSpeak(questionParts[0]);
+            }
+        });
         questionImage1.setImageResource(getResources().getIdentifier(
                 pictures[0],
                 "drawable",
                 getActivity().getPackageName()
-            ));
+        ));
         questionImage2.setImageResource(getResources().getIdentifier(
                 pictures[1],
                 "drawable",
@@ -74,9 +84,12 @@ public class QuestionTextPictureFragment extends Fragment
         questionImage2.setOnClickListener(this);
         questionImage3.setOnClickListener(this);
         questionImage4.setOnClickListener(this);
+
+        // Speak right after load question
+        ((LessonContentActivity)getActivity()).ttsSpeak(questionParts[0]);
+
         return view;
     }
-
 
     @Override
     public void onClick(View v) {

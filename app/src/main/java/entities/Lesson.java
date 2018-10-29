@@ -2,12 +2,12 @@ package entities;
 
 public class Lesson {
     private int id;
-    private int lessonGroupId;
+    private String lessonGroup;
     private String name;
 
-    public Lesson(int id, int lessonGroupId, String name) {
+    public Lesson(int id, String lessonGroup, String name) {
         this.id = id;
-        this.lessonGroupId = lessonGroupId;
+        this.lessonGroup = lessonGroup;
         this.name = name;
     }
 
@@ -22,12 +22,12 @@ public class Lesson {
         this.id = id;
     }
 
-    public int getLessonGroupId() {
-        return lessonGroupId;
+    public String getLessonGroupId() {
+        return lessonGroup;
     }
 
-    public void setLessonGroupId(int lessonGroupId) {
-        this.lessonGroupId = lessonGroupId;
+    public void setLessonGroupId(String lessonGroup) {
+        this.lessonGroup = lessonGroup;
     }
 
     public String getName() {

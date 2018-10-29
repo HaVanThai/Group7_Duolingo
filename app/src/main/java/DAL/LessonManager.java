@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import entities.Lesson;
+import entities.Question;
 
 public class LessonManager {
 
@@ -25,6 +26,7 @@ public class LessonManager {
         listener.onStart();
         final ArrayList<Lesson> lessons = new ArrayList<>();
         db.collection("lessons")
+                .orderBy("id")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -34,7 +36,26 @@ public class LessonManager {
 
                         } else {
                             listener.onFailed(task.getException());
-//                            Log.e("Error", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void getAllQuestions(final int lessonId, final OnGetDataListener listener) {
+        listener.onStart();
+        final ArrayList<Question> questions = new ArrayList<>();
+        db.collection("questions")
+                .whereEqualTo("lesson_id", lessonId)
+//                .orderBy("id")    // Doesn't work with whereEqualTo
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listener.onSuccess(task.getResult());
+
+                        } else {
+                            listener.onFailed(task.getException());
                         }
                     }
                 });

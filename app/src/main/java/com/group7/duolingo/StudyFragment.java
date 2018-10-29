@@ -63,16 +63,9 @@ public class StudyFragment extends Fragment {
                     lessons.add(
                             new Lesson(
                                     Integer.valueOf(document.getLong("id").toString()),
-                                    Integer.valueOf(document.getLong("lesson_group_id").toString()),
+                                    document.getString("lesson_group"),
                                     document.getString("name")
                             ));
-                }
-
-                // TODO
-                if(lessons.size() == 0) {
-                    for(int i=0;i<10;i++) {
-                        lessons.add(new Lesson(i, 0, "Lesson "+i));
-                    }
                 }
                 drawLessonUI(view, lessons);
             }
@@ -86,7 +79,7 @@ public class StudyFragment extends Fragment {
         return view;
     }
 
-    public void drawLessonUI(View view, ArrayList<Lesson> lessons){
+    public void drawLessonUI(View view, final ArrayList<Lesson> lessons){
         int[] colors = {
                 R.color.colorRed,
                 R.color.colorYellow,
@@ -152,13 +145,15 @@ public class StudyFragment extends Fragment {
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 ));
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-                textView.setText(lessons.get(index++).getName());
+                final Lesson lesson = lessons.get(index);
+                textView.setText(lesson.getName());
 
                 // Add event
                 imageView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
                         Intent lessonIntent = new Intent(getActivity(), LessonContentActivity.class);
+                        lessonIntent.putExtra("lessonId", lesson.getId());
                         startActivity(lessonIntent);
                     }
                 });
@@ -168,6 +163,7 @@ public class StudyFragment extends Fragment {
                 itemLayout.addView(textView);
 
                 rowLayout.addView(itemLayout);
+                index++;
             }
 
             scrollViewContainer.addView(rowLayout);

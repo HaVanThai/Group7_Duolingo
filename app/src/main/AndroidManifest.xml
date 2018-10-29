@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".LessonContentActivity" />
-        <activity android:name=".SignInActivity"></activity>
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".CongratsActivity"></activity>
     </application>
 
 </manifest>
