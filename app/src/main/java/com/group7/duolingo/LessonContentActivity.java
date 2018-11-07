@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -23,6 +24,7 @@ import java.util.Queue;
 
 import DAL.LessonManager;
 import DAL.OnGetDataListener;
+import DAL.UserManager;
 import entities.Question;
 
 public class LessonContentActivity extends AppCompatActivity {
@@ -30,6 +32,7 @@ public class LessonContentActivity extends AppCompatActivity {
     Fragment fragment;
     FragmentManager fm;
     LessonManager lessonManager;
+    UserManager userManager;
     Queue<Question> questionsQueue;
     Question question;
     Button buttonCheck;
@@ -53,6 +56,11 @@ public class LessonContentActivity extends AppCompatActivity {
 
         fm = getSupportFragmentManager();
         lessonManager = new LessonManager();
+        userManager = new UserManager();
+
+        final int lessonId = getIntent().getExtras().getInt("lessonId");
+        final String userDocId = getIntent().getExtras().getString("userDocId");
+        final String progress = getIntent().getExtras().getString("progress");
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -73,13 +81,13 @@ public class LessonContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(showNextQuestion) {
-                    startQuiz(questionsQueue);
+                    startQuiz(questionsQueue, userDocId, progress, lessonId);
                     showNextQuestion = false;
                     return;
                 }
                 if(answer.isEmpty()) {
                     return;
-                } else if(answer.equalsIgnoreCase(questionParts[questionParts.length - 1])) {
+                } else if(answer.trim().equalsIgnoreCase(questionParts[questionParts.length - 1].trim())) {
                     correctSound.start();
                     correctAnswers++;
                     progressBar.setProgress(correctAnswers*100/(correctAnswers + questionsQueue.size()));
@@ -120,7 +128,7 @@ public class LessonContentActivity extends AppCompatActivity {
         });
         quitLessonAlertDialog = quitLessonAlertDialogBuilder.create();
 
-        final int lessonId = getIntent().getExtras().getInt("lessonId");
+
         lessonManager.getAllQuestions(lessonId, new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -128,7 +136,7 @@ public class LessonContentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSuccess(QuerySnapshot data) {
+            public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
                 questionsQueue = new LinkedList<>();
                 for (QueryDocumentSnapshot document : data) {
                     questionsQueue.add(new Question(
@@ -139,7 +147,7 @@ public class LessonContentActivity extends AppCompatActivity {
                     ));
                 }
 
-                startQuiz(questionsQueue);
+                startQuiz(questionsQueue, userDocId, progress, lessonId);
             }
 
             @Override
@@ -160,12 +168,17 @@ public class LessonContentActivity extends AppCompatActivity {
         return isAnswered;
     }
 
-    public void startQuiz(Queue<Question> questionsQueue){
+    public void startQuiz(Queue<Question> questionsQueue, String userDocId, String progress, int lessonId){
         if(questionsQueue.size() == 0) {
+            // Stop text-to-speech service after lesson finished
             if(tts != null) {
                 tts.stop();
                 tts.shutdown();
             }
+
+            // Update progress to db
+            userManager.updateProgress(progress + "|" + lessonId, userDocId);
+            // Open congrats activity
             Intent congratsIntent = new Intent(this, CongratsActivity.class);
             startActivity(congratsIntent);
         } else {

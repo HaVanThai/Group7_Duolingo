@@ -32,7 +32,7 @@ public class LessonManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            listener.onSuccess(task.getResult());
+                            listener.onSuccess(task.getResult(), null);
 
                         } else {
                             listener.onFailed(task.getException());
@@ -52,7 +52,7 @@ public class LessonManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            listener.onSuccess(task.getResult());
+                            listener.onSuccess(task.getResult(), null);
 
                         } else {
                             listener.onFailed(task.getException());

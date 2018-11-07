@@ -60,22 +60,22 @@ public class QuestionListenPictureFragment extends Fragment
             }
         });
         questionImage1.setImageResource(getResources().getIdentifier(
-                pictures[0],
+                pictures[0].trim(),
                 "drawable",
                 getActivity().getPackageName()
         ));
         questionImage2.setImageResource(getResources().getIdentifier(
-                pictures[1],
+                pictures[1].trim(),
                 "drawable",
                 getActivity().getPackageName()
         ));
         questionImage3.setImageResource(getResources().getIdentifier(
-                pictures[2],
+                pictures[2].trim(),
                 "drawable",
                 getActivity().getPackageName()
         ));
         questionImage4.setImageResource(getResources().getIdentifier(
-                pictures[3],
+                pictures[3].trim(),
                 "drawable",
                 getActivity().getPackageName()
         ));

@@ -10,6 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import DAL.OnGetDataListener;
+import DAL.UserManager;
 import entities.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment active;
 
     User user;
+    UserManager userManager;
 
     final static int SIGN_IN_OK = 1;
 
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         user = new User();
+        userManager = new UserManager();
 
         fragment1 = new StudyFragment();
         fragment2 = new ProfileFragment();
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
         active = fragment1;
 
+        // Open sign in activity
         Intent intent = new Intent(this, SignInActivity.class);
         startActivityForResult(intent, SIGN_IN_OK);
     }
@@ -71,22 +81,81 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == SIGN_IN_OK) {
             if(resultCode == Activity.RESULT_OK){
-                Bundle bundleUser = new Bundle();
-                bundleUser.putString("email", data.getStringExtra("email"));
-                bundleUser.putString("personName", data.getStringExtra("personName"));
-                fragment2.setArguments(bundleUser);
 
-                fm.beginTransaction().add(R.id.main_content, fragment3, "3").hide(fragment3).commit();
-                fm.beginTransaction().add(R.id.main_content, fragment2, "2").hide(fragment2).commit();
-                fm.beginTransaction().add(R.id.main_content,fragment1, "1").commit();
+                final Bundle bundleUser = new Bundle();
+                final String email = data.getStringExtra("email");
+                final String personName = data.getStringExtra("personName");
+                bundleUser.putString("email", email);
+                bundleUser.putString("personName", personName);
 
-                BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+                final Bundle bundleStudy = new Bundle();
+
+                // Get user's data
+                userManager.getUser(data.getStringExtra("email"), new OnGetDataListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
+                        if (data.getDocuments().size() == 0) {
+                            // Handle new user
+                            userManager.addNewUser(new User(email, personName, ""), new OnGetDataListener() {
+                                @Override
+                                public void onStart() {
+
+                                }
+
+                                @Override
+                                public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
+                                    bundleStudy.putString("userDocId", docRef.getId());
+                                    bundleStudy.putString("progress", "");
+
+                                    startFragments(bundleStudy, bundleUser);
+                                }
+
+                                @Override
+                                public void onFailed(Exception error) {
+
+                                }
+                            });
+
+                        } else {
+                            // Load user progress information
+                            DocumentSnapshot document = data.getDocuments().get(0);
+                            bundleStudy.putString("userDocId", document.getId());
+                            bundleStudy.putString("progress", document.getString("progress"));
+
+                            startFragments(bundleStudy, bundleUser);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailed(Exception error) {
+
+                    }
+                });
+
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
             }
         }
+    }
+
+    protected void startFragments(Bundle bundleStudy, Bundle bundleUser) {
+        fragment1.setArguments(bundleStudy);
+        fragment2.setArguments(bundleUser);
+
+        fm.beginTransaction().add(R.id.main_content, fragment3, "3").hide(fragment3).commit();
+        fm.beginTransaction().add(R.id.main_content, fragment2, "2").hide(fragment2).commit();
+        fm.beginTransaction().add(R.id.main_content,fragment1, "1").commit();
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
 }
