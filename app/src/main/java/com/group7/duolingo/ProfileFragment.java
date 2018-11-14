@@ -31,8 +31,10 @@ public class ProfileFragment extends Fragment {
         String personName = getArguments().getString("personName");
         TextView textViewEmail = view.findViewById(R.id.email);
         TextView textViewPersonName = view.findViewById(R.id.personName);
+        TextView textViewPersonName2 = view.findViewById(R.id.personName2);
         textViewEmail.setText(email);
         textViewPersonName.setText(personName);
+        textViewPersonName2.setText(personName);
         return view;
     }
 
