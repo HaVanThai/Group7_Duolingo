@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
     protected void startFragments(Bundle bundleStudy, Bundle bundleUser) {
         fragment1.setArguments(bundleStudy);
         fragment2.setArguments(bundleUser);
+        fragment3.setArguments(bundleStudy);
 
         fm.beginTransaction().add(R.id.main_content, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.main_content, fragment2, "2").hide(fragment2).commit();
