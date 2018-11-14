@@ -9,31 +9,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="end"
         android:orientation="vertical">
-
-        <!-- TODO: Update blank fragment layout -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/border"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Hồ Sơ"
-                android:layout_marginTop="10dp"
-                android:textColor="#555555"
-                android:layout_marginLeft="50dp"
-                android:textStyle="bold"
-                android:textSize="30dp" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/border"
             android:orientation="vertical">
 
@@ -45,7 +27,7 @@
                     android:id="@+id/personName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="40dp" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -57,21 +39,16 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="40dp" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change account" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <LinearLayout
@@ -83,12 +60,12 @@
                     android:id="@+id/textView3"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:text="Rankings"
                     android:textColor="#555555"
-                    android:textSize="25dp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
 
                 <Button
@@ -96,11 +73,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:background="000000"
-                    android:text="Thêm"
+                    android:background="@color/colorPrimary"
+                    android:text="Add"
                     android:textColor="@color/colorBlue"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -116,33 +93,13 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/u_alone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="You are alone,"
+                        android:text="You are alone, "
                         android:textColor="#555555"
-                        android:textSize="23dp" />
-
-                    <TextView
-                        android:id="@+id/personName2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginTop="20dp"
-                        android:textColor="#555555"
-                        android:textSize="23dp" />
-
-                    <TextView
-                        android:id="@+id/textViewaaa"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:text="!!!"
-                        android:layout_marginTop="20dp"
-                        android:textColor="#555555"
-                        android:textSize="23dp" />
+                        android:textSize="24sp" />
 
                 </LinearLayout>
 
@@ -153,40 +110,13 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:text="Invite a friend to study English together."
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="160dp"
+                    android:src="@drawable/friends"/>
 
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Join a English Club!"
-                android:textAlignment="center"
-                android:textColor="#555555"
-                android:textSize="27dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="284dp"
-                android:src="@drawable/friends" />
-
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorBlue"
-                android:text="Find a Club"
-                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </LinearLayout>

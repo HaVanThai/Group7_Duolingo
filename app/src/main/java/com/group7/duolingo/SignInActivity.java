@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.io.Serializable;
+
 public class SignInActivity extends AppCompatActivity
         implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener{
@@ -30,7 +32,7 @@ public class SignInActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 007;
 
-    private GoogleApiClient mGoogleApiClient;
+    public static GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
 
     private SignInButton btnSignIn;

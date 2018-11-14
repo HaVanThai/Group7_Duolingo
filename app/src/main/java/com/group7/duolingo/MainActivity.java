@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -82,62 +83,62 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == SIGN_IN_OK) {
             if(resultCode == Activity.RESULT_OK){
 
-                final Bundle bundleUser = new Bundle();
-                final String email = data.getStringExtra("email");
-                final String personName = data.getStringExtra("personName");
-                bundleUser.putString("email", email);
-                bundleUser.putString("personName", personName);
+                    final Bundle bundleUser = new Bundle();
+                    final String email = data.getStringExtra("email");
+                    final String personName = data.getStringExtra("personName");
+                    bundleUser.putString("email", email);
+                    bundleUser.putString("personName", personName);
 
-                final Bundle bundleStudy = new Bundle();
+                    final Bundle bundleStudy = new Bundle();
 
-                // Get user's data
-                userManager.getUser(data.getStringExtra("email"), new OnGetDataListener() {
-                    @Override
-                    public void onStart() {
+                    // Get user's data
+                    userManager.getUser(data.getStringExtra("email"), new OnGetDataListener() {
+                        @Override
+                        public void onStart() {
 
-                    }
-
-                    @Override
-                    public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
-                        if (data.getDocuments().size() == 0) {
-                            // Handle new user
-                            userManager.addNewUser(new User(email, personName, ""), new OnGetDataListener() {
-                                @Override
-                                public void onStart() {
-
-                                }
-
-                                @Override
-                                public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
-                                    bundleStudy.putString("userDocId", docRef.getId());
-                                    bundleStudy.putString("progress", "");
-
-                                    startFragments(bundleStudy, bundleUser);
-                                }
-
-                                @Override
-                                public void onFailed(Exception error) {
-
-                                }
-                            });
-
-                        } else {
-                            // Load user progress information
-                            DocumentSnapshot document = data.getDocuments().get(0);
-                            bundleStudy.putString("userDocId", document.getId());
-                            bundleStudy.putString("progress", document.getString("progress"));
-
-                            startFragments(bundleStudy, bundleUser);
                         }
 
+                        @Override
+                        public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
+                            if (data.getDocuments().size() == 0) {
+                                // Handle new user
+                                userManager.addNewUser(new User(email, personName, ""), new OnGetDataListener() {
+                                    @Override
+                                    public void onStart() {
 
-                    }
+                                    }
 
-                    @Override
-                    public void onFailed(Exception error) {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot data, DocumentReference docRef) {
+                                        bundleStudy.putString("userDocId", docRef.getId());
+                                        bundleStudy.putString("progress", "");
 
-                    }
-                });
+                                        startFragments(bundleStudy, bundleUser);
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception error) {
+
+                                    }
+                                });
+
+                            } else {
+                                // Load user progress information
+                                DocumentSnapshot document = data.getDocuments().get(0);
+                                bundleStudy.putString("userDocId", document.getId());
+                                bundleStudy.putString("progress", document.getString("progress"));
+
+                                startFragments(bundleStudy, bundleUser);
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onFailed(Exception error) {
+
+                        }
+                    });
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
