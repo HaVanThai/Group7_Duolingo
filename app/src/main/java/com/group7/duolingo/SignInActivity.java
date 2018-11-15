@@ -77,26 +77,6 @@ public class SignInActivity extends AppCompatActivity
     }
 
 
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -131,14 +111,6 @@ public class SignInActivity extends AppCompatActivity
         switch (id) {
             case R.id.btn_sign_in:
                 signIn();
-                break;
-
-            case R.id.btn_sign_out:
-                signOut();
-                break;
-
-            case R.id.btn_revoke_access:
-                revokeAccess();
                 break;
         }
     }
